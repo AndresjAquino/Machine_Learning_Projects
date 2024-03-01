@@ -83,3 +83,27 @@ df_nuevo.describe()
 temperaturas_nuevo_csv = 'temperaturas_nuevo.csv'
 # Exportar el DataFrame a un archivo CSV
 df_nuevo.to_csv(temperaturas_nuevo_csv, index=False)  # El parámetro 'index=False' evita que se escriban los índices de fila en el archivo CSV
+
+# Ordeno las fechas de forma ascendente
+df_ordenado = df_nuevo.sort_values(by='FECHA', ascending=True)
+df_ordenado.head(20)
+
+# Genero Grafico para observar las temperaturas en función del tiempo
+FECHA = df_ordenado['FECHA']
+#TMAX = df_ordenado['TMAX']
+TMIN = df_ordenado['TMIM']
+plt.figure(figsize=(15, 8))
+# Trazar las temperaturas máximas
+#plt.plot(FECHA, TMAX, label='TMAX', color='red')
+# Trazar las temperaturas mínimas
+plt.plot(FECHA, TMIN, label='TMIN', color='blue')
+plt.xlabel('FECHA')
+plt.ylabel('TEMPERATURAS MINIMAS')
+plt.legend()
+plt.grid(True)
+plt.title('FECHA vs TEMPERATURAS MINIMAS')
+plt.show()
+
+# R E D   N E U R O N A L
+
+
