@@ -58,3 +58,28 @@ compra_helado = np.where(precio_base > 1.4 * precio_helado, "No", "Sí")
 matriz_nueva = np.column_stack((matriz_nueva, compra_helado))
 
 matriz_nueva
+
+# Reconvierto a nuevo DataFrame
+columnas = ['FECHA', 'TMAX', 'TMIM','NOMBRE','PRECIO_HELADO','COMPRA_HELADO']  # Lista de nombres de columnas
+df_nuevo = pd.DataFrame(matriz_nueva, columns=columnas)
+df_nuevo.info()
+
+# Convierto a valores numéricos
+df_nuevo['FECHA'] = df_nuevo['FECHA'].astype(int)
+df_nuevo['TMAX'] = pd.to_numeric(df_nuevo['TMAX'], errors='coerce')
+df_nuevo['TMIM'] = pd.to_numeric(df_nuevo['TMIM'], errors='coerce')
+df_nuevo['NOMBRE'] = df_nuevo['NOMBRE'].astype(str)
+df_nuevo['PRECIO_HELADO'] = pd.to_numeric(df_nuevo['PRECIO_HELADO'], errors='coerce')
+df_nuevo['COMPRA_HELADO'] = df_nuevo['COMPRA_HELADO'].astype(str)
+df_nuevo.info()
+
+# Elimino la columna 'TMIN'(columna 6) que por algún error que desconozco se duplica
+df_nuevo = df_nuevo.drop(df_nuevo.columns[6], axis=1)
+df_nuevo.head()
+df_nuevo.describe()
+
+# Cargo el DataFrame en un CSV
+# Nombre del archivo y la ubicación a guardar el archivo CSV.
+temperaturas_nuevo_csv = 'temperaturas_nuevo.csv'
+# Exportar el DataFrame a un archivo CSV
+df_nuevo.to_csv(temperaturas_nuevo_csv, index=False)  # El parámetro 'index=False' evita que se escriban los índices de fila en el archivo CSV
