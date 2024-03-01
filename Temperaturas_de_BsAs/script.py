@@ -81,21 +81,21 @@ df_nuevo.describe()
 # Cargo el DataFrame en un CSV
 # Nombre del archivo y la ubicación a guardar el archivo CSV.
 temperaturas_nuevo_csv = 'temperaturas_nuevo.csv'
-# Exportar el DataFrame a un archivo CSV
+# Exporto el DataFrame
 df_nuevo.to_csv(temperaturas_nuevo_csv, index=False)  # El parámetro 'index=False' evita que se escriban los índices de fila en el archivo CSV
 
 # Ordeno las fechas de forma ascendente
 df_ordenado = df_nuevo.sort_values(by='FECHA', ascending=True)
 df_ordenado.head(20)
 
-# Genero Grafico para observar las temperaturas en función del tiempo
+# Genero grafico para observar las temperaturas en función del tiempo
 FECHA = df_ordenado['FECHA']
 #TMAX = df_ordenado['TMAX']
 TMIN = df_ordenado['TMIM']
 plt.figure(figsize=(15, 8))
-# Trazar las temperaturas máximas
+# Trazo las temperaturas máximas
 #plt.plot(FECHA, TMAX, label='TMAX', color='red')
-# Trazar las temperaturas mínimas
+# Trazo las temperaturas mínimas
 plt.plot(FECHA, TMIN, label='TMIN', color='blue')
 plt.xlabel('FECHA')
 plt.ylabel('TEMPERATURAS MINIMAS')
@@ -106,4 +106,41 @@ plt.show()
 
 # R E D   N E U R O N A L
 
+# DIVISIÓN DE LOS DATOS
+# Divido el conjunto de datos en conjuntos de entrenamiento y prueba (80% y 20%)
+X = df_nuevo['TMIN']
+Y = df_nuevo['COMPRA_HELADO']
 
+X_train, X_test, Y_train, Y_test = train_test_split(
+    X,
+    Y,
+    test_size=0.2,
+    random_state=42)
+
+# Datos de entrada: Temperatura y Precio del Helado
+temperatura = 28.0  # Este valor cambia según la temperatura
+precio_helado = 2.5  # Este valor cambia según el precio del helado
+
+# Condiciones
+condicion_temperatura = temperatura > 27
+condicion_precio = precio_helado < 1.4  # 40 % de incremento
+
+# CREO UN MODELO DE RED NEURONAL UTILIZANDO TENSORFLOW
+
+model = tf.keras.Sequential()
+
+# Agrego tres perceptrones
+model.add(tf.keras.layers.Dense(3, activation='sigmoid', input_dim=2))
+
+# Compilo el modelo
+model.compile(optimizer='sgd', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Evaluo las condiciones y predicciones
+entrada = np.array([[condicion_temperatura, condicion_precio]])
+prediccion = model.predict(entrada)
+
+# Imprimo la predicción
+if prediccion[0][0] >= 0.5:
+    print("Es un buen momento para comprar helado.")
+else:
+    print("No es un buen momento para comprar helado.")
